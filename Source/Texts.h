@@ -3,6 +3,7 @@
 // This code is distributed under the "IDGAFAWYDWTCALAYGMPC" license, which means:
 // I Don't Give A Fuck About What You Do With This Code As Long As You Give Me Proper Credit
 //
+
 #pragma once
 
 // All program texts

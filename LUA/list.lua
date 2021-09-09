@@ -1,3 +1,9 @@
+-- PushLua - Yet another Ableton Push Lua Framework
+-- (c) 2021 - Mockba the Borg
+-- This code is distributed under the "IDGAFAWYDWTCALAYGMPC" license, which means:
+-- I Don't Give A Fuck About What You Do With This Code As Long As You Give Me Proper Credit
+--
+
 device = "Push"
 
 -- Setting to collect the required modules from the right place

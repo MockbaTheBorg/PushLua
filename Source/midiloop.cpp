@@ -1,11 +1,8 @@
-//*****************************************//
-//  midiloop.cpp
-//  by Mockba the Borg, 2021.
+// PushLua - Yet another Ableton Push Lua Framework
+// (c) 2021 - Mockba the Borg
+// This code is distributed under the "IDGAFAWYDWTCALAYGMPC" license, which means:
+// I Don't Give A Fuck About What You Do With This Code As Long As You Give Me Proper Credit
 //
-//  Simple program to allow automation of
-//  the Force (MPC) pads.
-//
-//*****************************************//
 
 #include <iostream>
 #include <cstdio>

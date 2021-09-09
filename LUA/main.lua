@@ -1,4 +1,8 @@
--- PushLua v1.00
+-- PushLua - Yet another Ableton Push Lua Framework
+-- (c) 2021 - Mockba the Borg
+-- This code is distributed under the "IDGAFAWYDWTCALAYGMPC" license, which means:
+-- I Don't Give A Fuck About What You Do With This Code As Long As You Give Me Proper Credit
+--
 
 -- Debug global to print additional information
 _debug = true
