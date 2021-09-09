@@ -8,4 +8,9 @@ The original idea of this framework is to use the Push connected to an Akai Forc
 <br>
 This is a very early, yet functional, work in progress and collaboration is welcome and encouraged.<br>
 <br>
-The software is developed in a modular way, so it can be used for other devices other than the Push 1.
+The software is developed in a modular way, so it can be used for other devices other than the Push 1.<br>
+
+## Building
+
+On Windows just extract and double click on setup.cmd to create the Visual Studio environment. Open and build.<br>
+On Linux just use the Makefile inside the Source folder.
