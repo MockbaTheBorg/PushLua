@@ -78,7 +78,8 @@ function loop()
 		byte3 = message:byte(3,3)
 		midiType = byte1 & 0xF0
 		midiChannel = (byte1 & 0x0F) + 1
-		printf("Channel %d: %02x ", midiChannel, midiType)
+
+		printf("Message %02x ",midiType)
 
 		-- Turn note on with speed 0 into note off
 		if midiType == 0x90 and byte3 == 0 then
