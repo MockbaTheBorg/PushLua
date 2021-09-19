@@ -56,8 +56,6 @@ end
 -- Load the configuration if exists, otherwise creates
 if file_exists("config.json") then
 	LoadConfig()
-else
-	SaveConfig()
 end
 
 -- Initialize OS specific elements
@@ -98,7 +96,7 @@ function loop()
 		elseif(midiType == 0xC0) then 
 			printf("Program Change %d %d\n", byte2, byte3)
 		elseif(midiType == 0xD0) then 
-			printf("Channel Pressure %d\n", byte2)
+			ProcessChannelPressure(byte2)
 		elseif(midiType == 0xE0) then
 			printf("Pitchbend %d %d\n", byte2, byte3)
 			SendMidiMessage("\xE0"..string.char(byte2)..string.char(byte3))

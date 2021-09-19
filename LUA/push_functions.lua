@@ -11,6 +11,8 @@ PushSysexHead = "\xF0\x47\x7F\x15"
 PushSysexTail = "\xF7"
 PushSetLive = "\x62\x00\x01\x00"
 PushSetUser = "\x62\x00\x01\x01"
+PushSetNoteAT = "\x5C\x00\x01\x00"
+PushSetChannelAT = "\x5C\x00\x01\x01"
 
 -- Default Pad colors
 -----------------------------------------------------
@@ -21,6 +23,10 @@ NoteColor = 21
 -- Octave offset (up / down)
 -----------------------------------------------------
 OctaveOffset = 0
+
+-- Velocity and Curve of notes sent
+SendVelocity = -1	-- -1 = As Input
+SendCurve = 0		-- 0 = Linear
 
 -- Note information
 -----------------------------------------------------
@@ -194,7 +200,11 @@ function InitDevice()
 	-- Set Push into Live mode (clears display)
 	printf("Initializing %s ... ", device)
 	SendDeviceMessage(PushSysexHead..PushSetLive..PushSysexTail)
-	Sleep(10)
+	Sleep(20)
+	local stamp,message = ReadDeviceMessage()
+	Sleep(20)
+	SendDeviceMessage(PushSysexHead..PushSetChannelAT..PushSysexTail)
+	Sleep(20)
 	local stamp,message = ReadDeviceMessage()
 	printf("Done!\n")
 
@@ -246,6 +256,8 @@ function InitPushLua()
 	UpdateMode()
 	UpdateGlobalNote()
 	UpdateGlobalScale()
+	UpdateSendVelocity()
+	UpdateSendCurve()
 	RedrawPads()
 	RedrawButtons()
 end
@@ -405,8 +417,12 @@ function ResetDevice()
 end
 
 -- Processes NoteOn messages
-function ProcessNoteOn(Note, Speed)
+function ProcessNoteOn(Note, Velocity)
 	local Pad = Note - NoteOffset
+	local newVelocity = math.floor(SendVelocity)
+	if newVelocity > -1 then
+		Velocity = newVelocity
+	end
 	if not (Note < NoteMin or Note > NoteMax) then
 		if EditMode then
 			if Duplicating then
@@ -426,18 +442,27 @@ function ProcessNoteOn(Note, Speed)
 				end
 			end
 			newNote = newNote + OctaveOffset
-			printf("Note %d on speed %d\n", newNote, Speed)
-			SendMidiMessage("\x90"..string.char(newNote)..string.char(Speed))
+			local newCurve = math.floor(SendCurve)
+			if newCurve ~= 0 then
+				if newCurve < 0 then
+					newCurve = newCurve / 10
+				end
+				local newV = Velocity / 127
+				newV = newV / (1 + (1 - newV) * newCurve)
+				Velocity = math.floor(newV * 127)
+			end
+			printf("Note %d on Velocity %d\n", newNote, Velocity)
+			SendMidiMessage("\x90"..string.char(newNote)..string.char(Velocity))
 		else
 			printf("Pad empty\n")
 		end
 	else
-			printf("Note %d on speed %d\n", Note, Speed)
+			printf("Note %d on Velocity %d\n", Note, Velocity)
 	end
 end
 
 -- Processes NoteOff messages
-function ProcessNoteOff(Note, Speed)
+function ProcessNoteOff(Note, Velocity)
 	local Pad = Note - NoteOffset
 	if not (Note < NoteMin or Note > NoteMax) then
 		local newNote = Notes[Pad]
@@ -449,7 +474,7 @@ function ProcessNoteOff(Note, Speed)
 			end
 			newNote = newNote + OctaveOffset
 			printf("Note %d off\n", newNote)
-			SendMidiMessage("\x80"..string.char(newNote)..string.char(Speed))
+			SendMidiMessage("\x80"..string.char(newNote)..string.char(Velocity))
 		end
 	else
 		printf("Note %d off\n", Note)
@@ -471,6 +496,18 @@ function ProcessNotePressure(Note, Pressure)
 		end
 	else
 		printf("Note Pressure %d %d\n", Note, Pressure)
+	end
+end
+
+-- Processes ChannelPressure messages
+function ProcessChannelPressure(Pressure)
+	local newPressure = math.floor(Pressure * 1.3 - 38.1)
+	if newPressure < 0 then
+		newPressure = 0
+	end
+	printf("Channel Pressure %d\n", newPressure)
+	if newPressure > 0 then
+		SendMidiMessage("\xD0"..string.char(newPressure))
 	end
 end
 
@@ -546,14 +583,20 @@ function ProcessCC(CC, Value)
 			end
 		end
 		if CC == 73 then	-- Edit Note knob
-			if Mode > 1 then
+			if Mode > 1 and Editing then
 				ChangeEditedNote(Value)
 			end
 		end
 		if CC == 74 then	-- Edit Color knob
-			if Mode > 1 then
+			if Mode > 1 and Editing then
 				ChangeEditedColor(Value)
 			end
+		end
+		if CC == 75 then	-- Note Velocity knob
+			ChangeVelocity(Value)
+		end
+		if CC == 76 then	-- Velocity Curve knob
+			ChangeCurve(Value)
 		end
 	else			-- CC is a Button
 		if Value == 127 then
@@ -616,6 +659,30 @@ function ProcessCC(CC, Value)
 			end
 		end
 	end
+end
+
+-- Changes the Send Velocity
+function ChangeVelocity(Value)
+	SendVelocity = SendVelocity + (Value / 10)
+	if SendVelocity < -1 then
+		SendVelocity = -1
+	end
+	if SendVelocity > 127 then
+		SendVelocity = 127
+	end
+	UpdateSendVelocity()
+end
+
+-- Changes the Velocity Curve
+function ChangeCurve(Value)
+	SendCurve = SendCurve + (Value / 10)
+	if SendCurve < -9 then
+		SendCurve = -9
+	end
+	if SendCurve > 9 then
+		SendCurve = 9
+	end
+	UpdateSendCurve()
 end
 
 -- Changes the Global Note
@@ -681,6 +748,8 @@ function Duplicate(Pad)
 		UserNotes[Pad] = UserNotes[EditingPad]
 		UserColors[Pad] = UserColors[EditingPad]
 	end
+	Duplicating = false
+	RedrawButtons()
 end
 
 -- Deletes a Pad
@@ -692,6 +761,8 @@ function Delete(Pad)
 		UserNotes[Pad] = Pad + NoteOffset
 		UserColors[Pad] = BackColor
 	end
+	Deleting = false
+	RedrawButtons()
 end
 
 -- Updates the editing Pad on screen
@@ -737,6 +808,28 @@ function UpdateEditingColor()
 	end
 	SetPadColor(EditingPad, EditingColor)
 	Colors[EditingPad] = EditingColor
+end
+
+-- Updates the Send Velocity on screen
+function UpdateSendVelocity()
+	local Velocity = math.floor(SendVelocity)
+	WriteText(1, 35, "Velocity")
+	if Velocity == -1 then
+		WriteText(2, 35, "As Input")
+	else
+		WriteText(2, 35, string.format("%5d   ", Velocity))
+	end
+end
+
+-- Updates the Velocity Curve on screen
+function UpdateSendCurve()
+	local Curve = math.floor(SendCurve)
+	WriteText(1, 46, "Curve")
+	if Curve == 0 then
+		WriteText(2, 46, "Linear")
+	else
+		WriteText(2, 46, string.format("%5d ", Curve))
+	end
 end
 
 -- Updates the Global Note on screen
