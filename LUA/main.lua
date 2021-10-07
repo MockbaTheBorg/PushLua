@@ -56,6 +56,8 @@ end
 -- Load the configuration if exists, otherwise creates
 if file_exists("config.json") then
 	LoadConfig()
+else
+	SaveConfig()
 end
 
 -- Initialize OS specific elements

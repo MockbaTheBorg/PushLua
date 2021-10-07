@@ -11,6 +11,7 @@ PushSysexHead = "\xF0\x47\x7F\x15"
 PushSysexTail = "\xF7"
 PushSetLive = "\x62\x00\x01\x00"
 PushSetUser = "\x62\x00\x01\x01"
+PushStripPB = "\x63\x00\x01\x05"
 PushSetNoteAT = "\x5C\x00\x01\x00"
 PushSetChannelAT = "\x5C\x00\x01\x01"
 
@@ -61,7 +62,8 @@ NoteNames = { "C","C#","D","D#","E","F","F#","G","G#","A","A#","B" }
 ScaleNames = {	"Major", "Natural Minor", "Harmonic Minor", "Melodic Minor", 
 				"Major Blues", "Minor Blues", "Maj Pentatonic", "Min Pentatonic",
 				"Ionian", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Aeolian", "Locrian",
-				"Alt Pentatonic" }
+				"Alt Pentatonic", "Alt Ionian #5", "Alt Dorian b2", "Alt Dorian b5", "Alt Phrygn b4",
+				"Alt Lydian #2", "Alt Lydian b7", "Alt Aeolian b1", "Alt Locrian", "Holt" }
 ScaleOffsets = {}
 ScaleOffsets[1] = { 2, 2, 1, 2, 2, 2, 1 }
 ScaleOffsets[2] = { 2, 1, 2, 2, 1, 2, 2 }
@@ -79,10 +81,15 @@ ScaleOffsets[13] = { 2, 2, 1, 2, 2, 1, 2 }
 ScaleOffsets[14] = { 2, 1, 2, 2, 1, 2, 2 }
 ScaleOffsets[15] = { 1, 2, 2, 1, 2, 2, 2 }
 ScaleOffsets[16] = { 1, 4, 2, 2, 3 }
-ScaleSizes = {}
-for i=1,#ScaleNames do
-	ScaleSizes[i] = #ScaleOffsets[i]
-end
+ScaleOffsets[17] = { 2, 2, 1, 3, 1, 2, 1 }
+ScaleOffsets[18] = { 1, 2, 2, 2, 2, 1, 2 }
+ScaleOffsets[19] = { 2, 1, 2, 1, 3, 1, 2 }
+ScaleOffsets[20] = { 1, 3, 1, 2, 2, 1, 2 }
+ScaleOffsets[21] = { 2, 2, 2, 2, 1, 2, 1 }
+ScaleOffsets[22] = { 2, 2, 2, 1, 2, 1, 2 }
+ScaleOffsets[23] = { 2, 2, 1, 2, 1, 3, 1 }
+ScaleOffsets[24] = { 1, 2, 1, 2, 2, 2, 2 }
+ScaleOffsets[25] = { 3, 2, 2, 2, 2, 1 }
 
 -- Notes and Colors definitions
 -----------------------------------------------------
@@ -145,7 +152,7 @@ function GetMidiOutPort()
 	local result = false
 	local ports = GetMidiOutList()
 	for key,value in pairs(ports) do
-		if string.sub(value, 1, 7) == "LuaPush" then
+		if string.sub(value, 1, 7) == "PushLua" then
 			result = key
 			return result
 		end
@@ -204,6 +211,10 @@ function InitDevice()
 	local stamp,message = ReadDeviceMessage()
 	Sleep(20)
 	SendDeviceMessage(PushSysexHead..PushSetChannelAT..PushSysexTail)
+	Sleep(20)
+	local stamp,message = ReadDeviceMessage()
+	Sleep(20)
+	SendDeviceMessage(PushSysexHead..PushStripPB..PushSysexTail)
 	Sleep(20)
 	local stamp,message = ReadDeviceMessage()
 	printf("Done!\n")
@@ -356,7 +367,7 @@ function GeneratePadsScale()
 		if _debug then
 			printf("Setting scale to %s %s\n", NoteNames[Note], ScaleNames[Scale])
 		end
-		local ScaleSize = ScaleSizes[Scale]
+		local ScaleSize = #ScaleOffsets[Scale]
 		local Pos = 1
 		local Note = Note + NoteOffset
 		local Index = 1
@@ -511,6 +522,11 @@ function ProcessChannelPressure(Pressure)
 	end
 end
 
+-- Send CC (passthru)
+function SendCC(cc, value)
+	SendMidiMessage("\xB0"..string.char(cc)..string.char(value))
+end
+
 -- Sets current mode to Scales
 function SetModeScales()
 	Mode = 1
@@ -563,6 +579,10 @@ end
 
 -- Processes CC messages
 function ProcessCC(CC, Value)
+	if CC == 64 then	-- Sustain pedal (passthru)
+		SendCC(CC, Value)
+		return
+	end
 	local Knob = false
 	if CC == 14 or CC == 15 or (CC > 70 and CC < 80) then
 		Knob = true
@@ -583,12 +603,12 @@ function ProcessCC(CC, Value)
 			end
 		end
 		if CC == 73 then	-- Edit Note knob
-			if Mode > 1 and Editing then
+			if Mode > 1 and EditMode then
 				ChangeEditedNote(Value)
 			end
 		end
 		if CC == 74 then	-- Edit Color knob
-			if Mode > 1 and Editing then
+			if Mode > 1 and EditMode then
 				ChangeEditedColor(Value)
 			end
 		end
@@ -610,7 +630,7 @@ function ProcessCC(CC, Value)
 					RedrawButtons()
 				end
 			else
-				if CC ~= 88 and CC ~= 118 then
+				if CC ~= 64 and CC ~= 88 and CC ~= 118 then
 					StopEdit()
 					RedrawButtons()
 				end
