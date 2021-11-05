@@ -11,7 +11,6 @@ PushSysexHead = "\xF0\x47\x7F\x15"
 PushSysexTail = "\xF7"
 PushSetLive = "\x62\x00\x01\x00"
 PushSetUser = "\x62\x00\x01\x01"
-PushStripPB = "\x63\x00\x01\x05"
 PushSetNoteAT = "\x5C\x00\x01\x00"
 PushSetChannelAT = "\x5C\x00\x01\x01"
 
@@ -211,10 +210,6 @@ function InitDevice()
 	local stamp,message = ReadDeviceMessage()
 	Sleep(20)
 	SendDeviceMessage(PushSysexHead..PushSetChannelAT..PushSysexTail)
-	Sleep(20)
-	local stamp,message = ReadDeviceMessage()
-	Sleep(20)
-	SendDeviceMessage(PushSysexHead..PushStripPB..PushSysexTail)
 	Sleep(20)
 	local stamp,message = ReadDeviceMessage()
 	printf("Done!\n")
@@ -468,7 +463,7 @@ function ProcessNoteOn(Note, Velocity)
 			printf("Pad empty\n")
 		end
 	else
-			printf("Note %d on Velocity %d\n", Note, Velocity)
+		printf("Note %d on Velocity %d\n", Note, Velocity)
 	end
 end
 

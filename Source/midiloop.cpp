@@ -143,9 +143,6 @@ int main( int argc, char ** /*argv[]*/ )
   }
 
   std::cout << "Midiloop v1.1 by Mockba the Borg\n";
-//  std::cout << "Looping ... press <enter> to quit.\n";
-//  char input;
-//  std::cin.get(input);
   while(true) {
 	  SLEEP(500);
   }

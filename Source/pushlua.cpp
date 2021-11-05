@@ -293,7 +293,7 @@ int main(int argc, char** argv) {
 		error.printMessage();
 		exit(EXIT_FAILURE);
 	}
-	devicein->ignoreTypes(false, true, true);
+	devicein->ignoreTypes(false, false, false);
 
 	try {
 		deviceout = new RtMidiOut();
