@@ -20,6 +20,7 @@ PushSetChannelAT = "\x5C\x00\x01\x01"
 ScaleColor = 45
 BackColor = 3
 NoteColor = 21
+RelColor = 22
 
 -- Octave offset (up / down)
 -----------------------------------------------------
@@ -56,40 +57,6 @@ Deleting = false
 -- Note definitions
 -----------------------------------------------------
 NoteNames = { "C","C#","D","D#","E","F","F#","G","G#","A","A#","B" }
-
--- Scale definitions
------------------------------------------------------
-ScaleNames = {	"Major", "Natural Minor", "Harmonic Minor", "Melodic Minor", 
-				"Major Blues", "Minor Blues", "Maj Pentatonic", "Min Pentatonic",
-				"Ionian", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Aeolian", "Locrian",
-				"Alt Pentatonic", "Alt Ionian #5", "Alt Dorian b2", "Alt Dorian b5", "Alt Phrygn b4",
-				"Alt Lydian #2", "Alt Lydian b7", "Alt Aeolian b1", "Alt Locrian", "Holt" }
-ScaleOffsets = {}
-ScaleOffsets[1] = { 2, 2, 1, 2, 2, 2, 1 }
-ScaleOffsets[2] = { 2, 1, 2, 2, 1, 2, 2 }
-ScaleOffsets[3] = { 2, 1, 2, 2, 1, 3, 1 }
-ScaleOffsets[4] = { 2, 1, 2, 2, 2, 2, 1 }
-ScaleOffsets[5] = { 2, 1, 1, 3, 2, 3 }
-ScaleOffsets[6] = { 2, 1, 1, 3, 2, 3 }
-ScaleOffsets[7] = { 2, 2, 3, 2, 3 }
-ScaleOffsets[8] = { 3, 2, 2, 3, 2 }
-ScaleOffsets[9] = { 2, 2, 1, 2, 2, 2, 1 }
-ScaleOffsets[10] = { 2, 1, 2, 2, 2, 1, 2 }
-ScaleOffsets[11] = { 1, 2, 2, 2, 1, 2, 2 }
-ScaleOffsets[12] = { 2, 2, 2, 1, 2, 2, 1 }
-ScaleOffsets[13] = { 2, 2, 1, 2, 2, 1, 2 }
-ScaleOffsets[14] = { 2, 1, 2, 2, 1, 2, 2 }
-ScaleOffsets[15] = { 1, 2, 2, 1, 2, 2, 2 }
-ScaleOffsets[16] = { 1, 4, 2, 2, 3 }
-ScaleOffsets[17] = { 2, 2, 1, 3, 1, 2, 1 }
-ScaleOffsets[18] = { 1, 2, 2, 2, 2, 1, 2 }
-ScaleOffsets[19] = { 2, 1, 2, 1, 3, 1, 2 }
-ScaleOffsets[20] = { 1, 3, 1, 2, 2, 1, 2 }
-ScaleOffsets[21] = { 2, 2, 2, 2, 1, 2, 1 }
-ScaleOffsets[22] = { 2, 2, 2, 1, 2, 1, 2 }
-ScaleOffsets[23] = { 2, 2, 1, 2, 1, 3, 1 }
-ScaleOffsets[24] = { 1, 2, 1, 2, 2, 2, 2 }
-ScaleOffsets[25] = { 3, 2, 2, 2, 2, 1 }
 
 -- Notes and Colors definitions
 -----------------------------------------------------
@@ -160,6 +127,127 @@ function GetMidiOutPort()
 	return result
 end
 
+-- Create the default scales
+function CreateScales()
+	ScaleNames = {	"Major", "Natural Minor", "Harmonic Minor", "Melodic Minor", 
+					"Major Blues", "Minor Blues", "Maj Pentatonic", "Min Pentatonic",
+					"Ionian", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Aeolian", "Locrian",
+					"Alt Pentatonic", "Alt Ionian #5", "Alt Dorian b2", "Alt Dorian b5", "Alt Phrygn b4",
+					"Alt Lydian #2", "Alt Lydian b7", "Alt Aeolian b1", "Alt Locrian" }
+	ScaleOffsets = {}
+	ScaleOffsets[1] = { 2, 2, 1, 2, 2, 2, 1 }
+	ScaleOffsets[2] = { 2, 1, 2, 2, 1, 2, 2 }
+	ScaleOffsets[3] = { 2, 1, 2, 2, 1, 3, 1 }
+	ScaleOffsets[4] = { 2, 1, 2, 2, 2, 2, 1 }
+	ScaleOffsets[5] = { 2, 1, 1, 3, 2, 3 }
+	ScaleOffsets[6] = { 2, 1, 1, 3, 2, 3 }
+	ScaleOffsets[7] = { 2, 2, 3, 2, 3 }
+	ScaleOffsets[8] = { 3, 2, 2, 3, 2 }
+	ScaleOffsets[9] = { 2, 2, 1, 2, 2, 2, 1 }
+	ScaleOffsets[10] = { 2, 1, 2, 2, 2, 1, 2 }
+	ScaleOffsets[11] = { 1, 2, 2, 2, 1, 2, 2 }
+	ScaleOffsets[12] = { 2, 2, 2, 1, 2, 2, 1 }
+	ScaleOffsets[13] = { 2, 2, 1, 2, 2, 1, 2 }
+	ScaleOffsets[14] = { 2, 1, 2, 2, 1, 2, 2 }
+	ScaleOffsets[15] = { 1, 2, 2, 1, 2, 2, 2 }
+	ScaleOffsets[16] = { 1, 4, 2, 2, 3 }
+	ScaleOffsets[17] = { 2, 2, 1, 3, 1, 2, 1 }
+	ScaleOffsets[18] = { 1, 2, 2, 2, 2, 1, 2 }
+	ScaleOffsets[19] = { 2, 1, 2, 1, 3, 1, 2 }
+	ScaleOffsets[20] = { 1, 3, 1, 2, 2, 1, 2 }
+	ScaleOffsets[21] = { 2, 2, 2, 2, 1, 2, 1 }
+	ScaleOffsets[22] = { 2, 2, 2, 1, 2, 1, 2 }
+	ScaleOffsets[23] = { 2, 2, 1, 2, 1, 3, 1 }
+	ScaleOffsets[24] = { 1, 2, 1, 2, 2, 2, 2 }
+end
+
+-- Load the scales from a json file
+function LoadScales()
+	printf("Loading Scales ... ")
+	local json = loadfile("../LUA/json.lua")()
+	local file = assert(io.open("scales.json", "r"))
+	str = file:read("*a")
+	file:close()
+
+	local scales = json.decode(str)
+	ScaleNames = scales["ScaleNames"]
+	ScaleOffsets = scales["ScaleOffsets"]
+	printf("ok.\n")
+end
+
+-- Save the scales to a json file
+function SaveScales()
+	local json = loadfile("../LUA/json.lua")()
+	local scales = {}
+	scales["ScaleNames"] = ScaleNames
+	scales["ScaleOffsets"] = ScaleOffsets
+
+	local file = assert(io.open("scales.json", "w"))
+	file:write(json.encode(scales))
+	file:close()
+end
+
+-- Load the configuration from json
+function LoadConfig()
+	printf("Loading Config ... ")
+	local json = loadfile("../LUA/json.lua")()
+	local file = assert(io.open("config.json", "r"))
+	str = file:read("*a")
+	file:close()
+
+	local config = json.decode(str)
+	ScaleColor = config["ScaleColor"]
+	BackColor = config["BackColor"]
+	NoteColor = config["NoteColor"]
+	RelColor = config["RelColor"]
+	printf("ok.\n")
+
+	printf("Loading Drums ... ")
+	local file = assert(io.open("drums.json", "r"))
+	str = file:read("*a")
+	file:close()
+	local drums = json.decode(str)
+	DrumNotes = drums["DrumNotes"]
+	DrumColors = drums["DrumColors"]
+	printf("ok.\n")
+
+	printf("Loading User ... ")
+	local file = assert(io.open("user.json", "r"))
+	str = file:read("*a")
+	file:close()
+	local user = json.decode(str)
+	UserNotes = user["UserNotes"]
+	UserColors = user["UserColors"]
+	printf("ok.\n")
+end
+
+-- Save the configuration onto json
+function SaveConfig()
+	local json = loadfile("../LUA/json.lua")()
+	local config = {}
+	config["ScaleColor"] = ScaleColor
+	config["BackColor"] = BackColor
+	config["RelColor"] = RelColor
+	config["NoteColor"] = NoteColor
+	local file = assert(io.open("config.json", "w"))
+	file:write(json.encode(config))
+	file:close()
+
+	local drums = {}
+	drums["DrumNotes"] = DrumNotes
+	drums["DrumColors"] = DrumColors
+	local file = assert(io.open("drums.json", "w"))
+	file:write(json.encode(drums))
+	file:close()
+
+	local user = {}
+	user["UserNotes"] = UserNotes
+	user["UserColors"] = UserColors
+	local file = assert(io.open("user.json", "w"))
+	file:write(json.encode(user))
+	file:close()
+end
+
 -- OS specific initializations
 function InitOS()
 	local MyOS = GetOS()
@@ -206,6 +294,8 @@ function InitDevice()
 
 	-- Set Push into Live mode (clears display)
 	printf("Initializing %s ... ", device)
+	SendDeviceMessage(PushSysexHead..PushSetUser..PushSysexTail)
+	Sleep(20)
 	SendDeviceMessage(PushSysexHead..PushSetLive..PushSysexTail)
 	Sleep(20)
 	local stamp,message = ReadDeviceMessage()
@@ -220,6 +310,19 @@ function InitDevice()
 	printf("Done!\n")
 
 	Init()	-- Alerts the C code of the initialization
+end
+
+-- Close device
+function ResetDevice()
+	printf("\nClosing %s ... ", device)
+
+	-- Turn off User button
+	SetButtonColor(59, 0)
+
+	-- Set Push into User mode
+	SendDeviceMessage(PushSysexHead..PushSetUser..PushSysexTail)
+
+	printf("Done!\n")
 end
 
 -- Clears a line (1-4) on the LCD
@@ -253,7 +356,7 @@ end
 
 -- PushLua specific initializations
 function InitPushLua()
-	WriteText(1, 1, "PushLua v1.00")
+	WriteText(1, 1, "PushLua "..version)
 	WriteText(2, 1, "by MockbaTheBorg")
 	WriteText(3, 1, "Loading...")
 	Sleep(1500)
@@ -271,89 +374,6 @@ function InitPushLua()
 	UpdateSendCurve()
 	RedrawPads()
 	RedrawButtons()
-end
-
--- Sets the color of a pad
-function SetPadColor(Pad, Color)
-	local Note = Pad + NoteOffset
-	SendDeviceMessage("\x90"..string.char(Note)..string.char(Color))
-end
-
--- Sets the color of a button
-function SetButtonColor(Button, Color)
-	if _debug then
-		printf("Setting button %d color to %d\n", Button, Color)
-	end
-	SendDeviceMessage("\xB0"..string.char(Button)..string.char(Color))
-end
-
--- Redraw all the pads
-function RedrawPads()
-	if _debug then
-		printf("Redrawing Pads\n")
-	end
-	for i=1,64 do
-		if(Colors[i] > -1) then
-			SetPadColor(i, Colors[i])
-		end
-	end
-end
-
--- Redraw buttons
-function RedrawButtons()
-	if _debug then
-		printf("Redrawing Buttons\n")
-	end
-	if EditMode then
-		SetButtonColor(50, 3)
-		if Duplicating then
-			SetButtonColor(88, 6)
-		else
-			SetButtonColor(88, 1)
-		end
-		if Deleting then
-			SetButtonColor(118, 6)
-		else
-			SetButtonColor(118, 1)
-		end
-	else
-		SetButtonColor(50, 1)
-		SetButtonColor(88, 0)
-		SetButtonColor(118, 0)
-	end
-	if Mode == 1 then
-		SetButtonColor(58, 5)
-		SetButtonColor(59, 4)
-		SetButtonColor(50, 0)		
-	end
-	if Mode == 2 then
-		SetButtonColor(58, 4)
-		SetButtonColor(59, 4)
-	end
-	if Mode == 3 then
-		SetButtonColor(58, 4)
-		SetButtonColor(59, 5)
-	end
-	if OctaveOffset == 0 then
-		SetButtonColor(54, 4)
-		SetButtonColor(55, 4)
-	end
-	if OctaveOffset == 12 then
-		SetButtonColor(54, 4)
-		SetButtonColor(55, 5)
-	end
-	if OctaveOffset == 24 then
-		SetButtonColor(54, 4)
-		SetButtonColor(55, 6)
-	end
-	if OctaveOffset == -12 then
-		SetButtonColor(54, 5)
-		SetButtonColor(55, 4)
-	end
-	if OctaveOffset == -24 then
-		SetButtonColor(54, 6)
-		SetButtonColor(55, 4)
-	end
 end
 
 -- Generate the Scale note translations according to Note/Scale
@@ -414,272 +434,139 @@ function GeneratePadsScale()
 	end
 end
 
--- Close device
-function ResetDevice()
-	printf("\nClosing %s ... ", device)
-
-	-- Turn off User button
-	SetButtonColor(59, 0)
-
-	-- Set Push into User mode
-	SendDeviceMessage(PushSysexHead..PushSetUser..PushSysexTail)
-
-	printf("Done!\n")
+-- Updates the Mode on screen
+function UpdateMode()
+	WriteText(1, 1, "Mode:       ")
+	WriteText(1, 7, Modes[Mode])
 end
 
--- Processes NoteOn messages
-function ProcessNoteOn(Note, Velocity)
-	local Pad = Note - NoteOffset
-	local newVelocity = math.floor(SendVelocity)
-	if newVelocity > -1 then
-		Velocity = newVelocity
+-- Updates the Global Note on screen
+function UpdateGlobalNote()
+	local Note = math.floor(GlobalNote)
+	WriteText(2, 1, string.format("%-2s", NoteNames[Note]))
+end
+
+-- Updates the Global Scale on screen
+function UpdateGlobalScale()
+	local Scale = math.floor(GlobalScale)
+	WriteText(2, 4, string.format("%-14s", ScaleNames[Scale]))
+end
+
+-- Updates the Send Velocity on screen
+function UpdateSendVelocity()
+	local Velocity = math.floor(SendVelocity)
+	WriteText(1, 35, "Velocity")
+	if Velocity == -1 then
+		WriteText(2, 35, "As Input")
+	else
+		WriteText(2, 35, string.format("%5d   ", Velocity))
 	end
-	if not (Note < NoteMin or Note > NoteMax) then
-		if EditMode then
-			if Duplicating then
-				Duplicate(Pad)
-			end
-			if Deleting then
-				Delete(Pad)
-			end
-			EditingPad = Pad
-			UpdateEditingPad()
+end
+
+-- Updates the Velocity Curve on screen
+function UpdateSendCurve()
+	local Curve = math.floor(SendCurve)
+	WriteText(1, 46, "Curve")
+	if Curve == 0 then
+		WriteText(2, 46, "Linear")
+	else
+		WriteText(2, 46, string.format("%5d ", Curve))
+	end
+end
+
+-- Sets the color of a pad
+function SetPadColor(Pad, Color)
+	local Note = Pad + NoteOffset
+	SendDeviceMessage("\x90"..string.char(Note)..string.char(Color))
+end
+
+-- Sets the color of a button
+function SetButtonColor(Button, Color)
+	if _debug then
+		printf("Setting button %d color to %d\n", Button, Color)
+	end
+	SendDeviceMessage("\xB0"..string.char(Button)..string.char(Color))
+end
+
+-- Redraw all the pads
+function RedrawPads()
+	if _debug then
+		printf("Redrawing Pads\n")
+	end
+	for i=1,64 do
+		if Colors[i] > -1 then
+			SetPadColor(i, Colors[i])
 		end
-		local newNote = Notes[Pad]
-		if newNote > -1 then
-			for i=1,64 do
-				if(Notes[i] == newNote) then
-					SetPadColor(i, NoteColor)
-				end
-			end
-			newNote = newNote + OctaveOffset
-			local newCurve = math.floor(SendCurve)
-			if newCurve ~= 0 then
-				if newCurve < 0 then
-					newCurve = newCurve / 10
-				end
-				local newV = Velocity / 127
-				newV = newV / (1 + (1 - newV) * newCurve)
-				Velocity = math.floor(newV * 127)
-			end
-			printf("Note %d on Velocity %d\n", newNote, Velocity)
-			SendMidiMessage("\x90"..string.char(newNote)..string.char(Velocity))
+	end
+end
+
+-- Redraw buttons
+function RedrawButtons()
+	if _debug then
+		printf("Redrawing Buttons\n")
+	end
+	-- Edit mode
+	if EditMode then
+		SetButtonColor(buttonNotes, dimBlinkFast)
+		SetButtonColor(buttonUndo, dimBlinkFast)
+		if Duplicating then
+			SetButtonColor(buttonDuplicate, litBlinkFast)
 		else
-			printf("Pad empty\n")
+			SetButtonColor(buttonDuplicate, dim)
+		end
+		if Deleting then
+			SetButtonColor(buttonDelete, litBlinkFast)
+		else
+			SetButtonColor(buttonDelete, dim)
 		end
 	else
-		printf("Note %d on Velocity %d\n", Note, Velocity)
+		SetButtonColor(buttonNotes, dim)
+		SetButtonColor(buttonUndo, off)
+		SetButtonColor(buttonDuplicate, off)
+		SetButtonColor(buttonDelete, off)
 	end
-end
-
--- Processes NoteOff messages
-function ProcessNoteOff(Note, Velocity)
-	local Pad = Note - NoteOffset
-	if not (Note < NoteMin or Note > NoteMax) then
-		local newNote = Notes[Pad]
-		if newNote > -1 then
-			for i=1,64 do
-				if(Notes[i] == newNote) then
-					SetPadColor(i, Colors[i])
-				end
-			end
-			newNote = newNote + OctaveOffset
-			printf("Note %d off\n", newNote)
-			SendMidiMessage("\x80"..string.char(newNote)..string.char(Velocity))
-		end
+	-- Mode buttons
+	if Mode == 1 then
+		SetButtonColor(buttonScales, litBlink)
+		SetButtonColor(buttonUser, lit)
+		SetButtonColor(buttonNotes, off)
+	end
+	if Mode == 2 then
+		SetButtonColor(buttonScales, lit)
+		SetButtonColor(buttonUser, lit)
+	end
+	if Mode == 3 then
+		SetButtonColor(buttonScales, lit)
+		SetButtonColor(buttonUser, litBlink)
+	end
+	-- Octave offset
+	if Mode == 2 then
+		SetButtonColor(buttonOctDown, off)
+		SetButtonColor(buttonOctUp, off)
 	else
-		printf("Note %d off\n", Note)
-	end
-	if Note == 0 or Note == 1 then
-		GeneratePadsScale()
-		RedrawPads()
-	end
-end
-
--- Processes NotePressure messages
-function ProcessNotePressure(Note, Pressure)
-	local Pad = Note - NoteOffset
-	if not (Note < NoteMin or Note > NoteMax) then
-		newNote = Notes[Pad] + OctaveOffset
-		if newNote > -1 then
-			printf("Note Pressure %d %d\n", newNote, Pressure)
-			SendMidiMessage("\xA0"..string.char(newNote)..string.char(Pressure))
+		if OctaveOffset == 0 then
+			SetButtonColor(buttonOctDown, lit)
+			SetButtonColor(buttonOctUp, lit)
 		end
-	else
-		printf("Note Pressure %d %d\n", Note, Pressure)
-	end
-end
-
--- Processes ChannelPressure messages
-function ProcessChannelPressure(Pressure)
-	local newPressure = math.floor(Pressure * 1.3 - 38.1)
-	if newPressure < 0 then
-		newPressure = 0
-	end
-	printf("Channel Pressure %d\n", newPressure)
-	if newPressure > 0 then
-		SendMidiMessage("\xD0"..string.char(newPressure))
-	end
-end
-
--- Send CC (passthru)
-function SendCC(cc, value)
-	SendMidiMessage("\xB0"..string.char(cc)..string.char(value))
-end
-
--- Sets current mode to Scales
-function SetModeScales()
-	Mode = 1
-	UpdateMode()
-	UpdateGlobalNote()
-	UpdateGlobalScale()
-	SetButtonColor(58, 5)
-	SetButtonColor(59, 4)	
-	GeneratePadsScale()
-	RedrawPads()
-end
-
--- Sets current mode to Drums
-function SetModeDrums()
-	Mode = 2
-	UpdateMode()
-	WriteText(2, 1, "                 ")
-	GeneratePadsScale()
-	RedrawPads()
-end
-
--- Sets current mode to User
-function SetModeUser()
-	Mode = 3
-	UpdateMode()
-	WriteText(2, 1, "                 ")
-	GeneratePadsScale()
-	RedrawPads()
-end
-
--- Starts Edit Mode
-function StartEdit()
-	EditMode = true
-	WriteText(1, 18, "Editing Pad    ")
-	WriteText(2, 18, "Note  Color")
-	UpdateEditingPad()
-	UpdateEditingNote()
-	UpdateEditingColor()
-end
-
--- Stops Edit Mode
-function StopEdit()
-	EditMode = false
-	WriteText(1, 18, "              ")
-	WriteText(2, 18, "              ")
-	WriteText(3, 18, "              ")
-	SaveConfig()
-	EditingPad = 1
-end
-
--- Processes CC messages
-function ProcessCC(CC, Value)
-	if CC == 64 then	-- Sustain pedal (passthru)
-		SendCC(CC, Value)
-		return
-	end
-	local Knob = false
-	if CC == 14 or CC == 15 or (CC > 70 and CC < 80) then
-		Knob = true
-		if Value > 63 then
-			Value = Value - 128
+		if OctaveOffset == 12 then
+			SetButtonColor(buttonOctDown, lit)
+			SetButtonColor(buttonOctUp, litBlink)
 		end
-	end
-	printf("CC %d to %d\n", CC, Value)
-	if Knob then	-- CC is a Knob
-		if CC == 71 then	-- Note knob
-			if Mode == 1 then
-				ChangeGlobalNote(Value)
-			end
+		if OctaveOffset == 24 then
+			SetButtonColor(buttonOctDown, lit)
+			SetButtonColor(buttonOctUp, litBlinkFast)
 		end
-		if CC == 72 then	-- Scale knob
-			if Mode == 1 then
-				ChangeGlobalScale(Value)
-			end
+		if OctaveOffset == -12 then
+			SetButtonColor(buttonOctDown, litBlink)
+			SetButtonColor(buttonOctUp, lit)
 		end
-		if CC == 73 then	-- Edit Note knob
-			if Mode > 1 and EditMode then
-				ChangeEditedNote(Value)
-			end
-		end
-		if CC == 74 then	-- Edit Color knob
-			if Mode > 1 and EditMode then
-				ChangeEditedColor(Value)
-			end
-		end
-		if CC == 75 then	-- Note Velocity knob
-			ChangeVelocity(Value)
-		end
-		if CC == 76 then	-- Velocity Curve knob
-			ChangeCurve(Value)
-		end
-	else			-- CC is a Button
-		if Value == 127 then
-			if CC == 50 then	-- Edit mode
-				if Mode > 1 then
-					if EditMode then
-						StopEdit()
-					else
-						StartEdit()
-					end
-					RedrawButtons()
-				end
-			else
-				if CC ~= 64 and CC ~= 88 and CC ~= 118 then
-					StopEdit()
-					RedrawButtons()
-				end
-			end
-			if CC == 54 then	-- Octave down
-				OctaveOffset = OctaveOffset - 12
-				if OctaveOffset < -24 then
-					OctaveOffset = -24
-				end
-				printf("OctaveOffset set to %d\n", OctaveOffset);
-				RedrawButtons()
-			end
-			if CC == 55 then	-- Octave up
-				OctaveOffset = OctaveOffset + 12
-				if OctaveOffset > 24 then
-					OctaveOffset = 24
-				end
-				printf("OctaveOffset set to %d\n", OctaveOffset);
-				RedrawButtons()
-			end
-			if CC == 58 then	-- Scale mode
-				if Mode == 1 then
-					SetModeDrums()
-				else
-					SetModeScales()
-				end
-				RedrawButtons()
-			end
-			if CC == 59 then	-- User mode
-				SetModeUser()
-				RedrawButtons()
-			end
-			if CC == 88 then
-				if Deleting then
-					Deleting = false
-				end
-				Duplicating = not Duplicating
-				RedrawButtons()
-			end
-			if CC == 118 then
-				if Duplicating then
-					Duplicating = false
-				end
-				Deleting = not Deleting
-				RedrawButtons()
-			end
+		if OctaveOffset == -24 then
+			SetButtonColor(buttonOctDown, litBlinkFast)
+			SetButtonColor(buttonOctUp, lit)
 		end
 	end
 end
+
 
 -- Changes the Send Velocity
 function ChangeVelocity(Value)
@@ -753,36 +640,70 @@ function ChangeEditedColor(Value)
 	UpdateEditingColor()
 end
 
--- Updates the Mode on screen
-function UpdateMode()
-	WriteText(1, 1, "Mode:       ")
-	WriteText(1, 7, Modes[Mode])
+-- Sets current mode to Scales
+function SetModeScales()
+	Mode = 1
+	UpdateMode()
+	UpdateGlobalNote()
+	UpdateGlobalScale()
+	SetButtonColor(buttonScales, litBlink)
+	SetButtonColor(buttonUser, lit)
+	GeneratePadsScale()
+	RedrawPads()
 end
 
--- Duplicates a Pad
-function Duplicate(Pad)
-	if Mode == 2 then
-		DrumNotes[Pad] = DrumNotes[EditingPad]
-		DrumColors[Pad] = DrumColors[EditingPad]
-	else
-		UserNotes[Pad] = UserNotes[EditingPad]
-		UserColors[Pad] = UserColors[EditingPad]
-	end
-	Duplicating = false
-	RedrawButtons()
+-- Sets current mode to Drums
+function SetModeDrums()
+	Mode = 2
+	UpdateMode()
+	WriteText(2, 1, "                 ")
+	GeneratePadsScale()
+	RedrawPads()
 end
 
--- Deletes a Pad
-function Delete(Pad)
-	if Mode == 2 then
-		DrumNotes[Pad] = -1
-		DrumColors[Pad] = 0
+-- Sets current mode to User
+function SetModeUser()
+	Mode = 3
+	UpdateMode()
+	WriteText(2, 1, "                 ")
+	GeneratePadsScale()
+	RedrawPads()
+end
+
+-- Starts Edit Mode
+function StartEdit()
+	EditMode = true
+	WriteText(1, 18, "Editing Pad    ")
+	WriteText(2, 18, "Note  Color")
+	UpdateEditingPad()
+	UpdateEditingNote()
+	UpdateEditingColor()
+end
+
+-- Stops Edit Mode
+function StopEdit(CC)
+	EditMode = false
+	WriteText(1, 18, "              ")
+	WriteText(2, 18, "              ")
+	WriteText(3, 18, "              ")
+	if CC ~= buttonUndo then
+		SaveConfig()
 	else
-		UserNotes[Pad] = Pad + NoteOffset
-		UserColors[Pad] = BackColor
+		LoadConfig()
+		GeneratePadsScale()
+		RedrawPads()
+		printf("Edit mode cancelled\n")
 	end
-	Deleting = false
-	RedrawButtons()
+	EditingPad = 1
+end
+
+-- Checks if CC is a knob
+function IsKnob(CC)
+	if CC == knobTempo or CC == knobVolume or (CC > 70 and CC < 80) then
+		return true
+	else
+		return false
+	end
 end
 
 -- Updates the editing Pad on screen
@@ -830,74 +751,308 @@ function UpdateEditingColor()
 	Colors[EditingPad] = EditingColor
 end
 
--- Updates the Send Velocity on screen
-function UpdateSendVelocity()
-	local Velocity = math.floor(SendVelocity)
-	WriteText(1, 35, "Velocity")
-	if Velocity == -1 then
-		WriteText(2, 35, "As Input")
-	else
-		WriteText(2, 35, string.format("%5d   ", Velocity))
+-- Sends a note on message
+function SendNoteOn(Pad, Note, Velocity)
+	local newVelocity = math.floor(SendVelocity)
+	if newVelocity > -1 then
+		Velocity = newVelocity
+	end
+	local newNote = Notes[Pad]
+	if newNote > -1 then
+		for i=1,64 do
+			if Notes[i] == newNote then
+				if i == Pad then
+					SetPadColor(i, NoteColor)
+				else
+					SetPadColor(i, RelColor)
+				end
+			end
+		end
+		newNote = newNote + OctaveOffset
+		local newCurve = math.floor(SendCurve) * -1
+		if newCurve ~= 0 then
+			if newCurve < 0 then
+				newCurve = newCurve / 10
+			end
+			local newV = Velocity / 127
+			newV = newV / (1 + (1 - newV) * newCurve)
+			Velocity = math.floor(newV * 127)
+		end
+		SendMidiMessage("\x90"..string.char(newNote)..string.char(Velocity))
 	end
 end
 
--- Updates the Velocity Curve on screen
-function UpdateSendCurve()
-	local Curve = math.floor(SendCurve)
-	WriteText(1, 46, "Curve")
-	if Curve == 0 then
-		WriteText(2, 46, "Linear")
-	else
-		WriteText(2, 46, string.format("%5d ", Curve))
+-- Sends a note off message
+function SendNoteOff(Pad, Note, Velocity)
+	local newNote = Notes[Pad]
+	if newNote > -1 then
+		for i=1,64 do
+			if Notes[i] == newNote then
+				SetPadColor(i, Colors[i])
+			end
+		end
+		newNote = newNote + OctaveOffset
+		SendMidiMessage("\x80"..string.char(newNote)..string.char(Velocity))
 	end
 end
 
--- Updates the Global Note on screen
-function UpdateGlobalNote()
-	local Note = math.floor(GlobalNote)
-	WriteText(2, 1, string.format("%-2s", NoteNames[Note]))
+-- Processes note/scale knobs
+function ScaleKnobs(CC, Value)
+	if CC == knob1 then	-- Note knob
+		ChangeGlobalNote(Value)
+		return
+	end
+	if CC == knob2 then	-- Scale knob
+		ChangeGlobalScale(Value)
+	end
 end
 
--- Updates the Global Scale on screen
-function UpdateGlobalScale()
-	local Scale = math.floor(GlobalScale)
-	WriteText(2, 4, string.format("%-14s", ScaleNames[Scale]))
+-- Processes velocity/curve knobs
+function DynamicsKnobs(CC, Value)
+	if CC == knob5 then	-- Note Velocity knob
+		ChangeVelocity(Value)
+		return
+	end
+	if CC == knob6 then	-- Velocity Curve knob
+		ChangeCurve(Value)
+	end
 end
 
--- Save the configuration onto json
-function SaveConfig()
-	local json = loadfile("../LUA/json.lua")()
-	local config = {}
-	config["ScaleNames"] = ScaleNames
-	config["ScaleOffsets"] = ScaleOffsets
-	config["ScaleColor"] = ScaleColor
-	config["BackColor"] = BackColor
-	config["NoteColor"] = NoteColor
-	config["DrumNotes"] = DrumNotes
-	config["DrumColors"] = DrumColors
-	config["UserNotes"] = UserNotes
-	config["UserColors"] = UserColors
-
-	local file = assert(io.open("config.json", "w"))
-	file:write(json.encode(config))
-	file:close()
+-- Processes edit knobs
+function EditKnobs(CC, Value)
+	if CC == knob3 then	-- Edit Note knob
+		if EditMode then
+			ChangeEditedNote(Value)
+		end
+		return
+	end
+	if CC == knob4 then	-- Edit Color knob
+		if EditMode then
+			ChangeEditedColor(Value)
+		end
+	end
 end
 
--- Load the configuration from json
-function LoadConfig()
-	local json = loadfile("../LUA/json.lua")()
-	local file = assert(io.open("config.json", "r"))
-	str = file:read()
-	file:close()
+-- Processes edit buttons
+function EditButtons(CC)
+	if CC == buttonNotes then	-- Edit mode
+		if EditMode then
+			StopEdit(CC)
+		else
+			StartEdit()
+		end
+		RedrawButtons()
+		return
+	else
+		if CC ~= midiCCSustain and CC ~= buttonDuplicate and CC ~= buttonDelete then
+			StopEdit(CC)
+			RedrawButtons()
+			return
+		end
+	end
+	if CC == buttonDuplicate then
+		if Deleting then
+			Deleting = false
+		end
+		Duplicating = not Duplicating
+		RedrawButtons()
+		return
+	end
+	if CC == buttonDelete then
+		if Duplicating then
+			Duplicating = false
+		end
+		Deleting = not Deleting
+		RedrawButtons()
+	end
+end
 
-	local config = json.decode(str)
-	ScaleNames = config["ScaleNames"]
-	ScaleOffsets = config["ScaleOffsets"]
-	ScaleColor = config["ScaleColor"]
-	BackColor = config["BackColor"]
-	NoteColor = config["NoteColor"]
-	DrumNotes = config["DrumNotes"]
-	DrumColors = config["DrumColors"]
-	UserNotes = config["UserNotes"]
-	UserColors = config["UserColors"]
+-- Processes octave buttons
+function OctaveButtons(CC)
+	if CC == buttonOctDown then	-- Octave down
+		OctaveOffset = OctaveOffset - 12
+		if OctaveOffset < -24 then
+			OctaveOffset = -24
+		end
+		printf("OctaveOffset set to %d\n", OctaveOffset);
+		RedrawButtons()
+		return
+	end
+	if CC == buttonOctUp then	-- Octave up
+		OctaveOffset = OctaveOffset + 12
+		if OctaveOffset > 24 then
+			OctaveOffset = 24
+		end
+		printf("OctaveOffset set to %d\n", OctaveOffset);
+		RedrawButtons()
+	end
+end
+
+-- Scales Mode
+-----------------------------------------------------
+function processScalesMode(message)
+	local msg = message:byte(1,1)
+	-- Note on with velocity 0 becomes note off
+	if msg == midiNoteOn and message:byte(3,3) == 0 then
+		msg = midiNoteOff
+	end
+	if msg == midiNoteOn then
+		local Note = message:byte(2,2)
+		if not (Note < NoteMin or Note > NoteMax) then
+			local Pad = Note - NoteOffset
+			local Velocity = message:byte(3,3)
+			SendNoteOn(Pad, Note, Velocity)
+		end		
+	elseif msg == midiNoteOff then
+		local Note = message:byte(2,2)
+		if not (Note < NoteMin or Note > NoteMax) then
+			local Pad = Note - NoteOffset
+			local Velocity = message:byte(3,3)
+			SendNoteOff(Pad, Note, Velocity)
+		end
+		if Note == 0 or Note == 1 then
+			GeneratePadsScale()
+			RedrawPads()
+		end
+	elseif msg == midiControl then
+		local CC = message:byte(2,2)
+		local Value = message:byte(3,3)
+		if IsKnob(CC) then	-- CC is a Knob
+			-- Correct CC value for knobs
+			if Value > 63 then
+				Value = Value - 128
+			end
+			ScaleKnobs(CC, Value)
+			DynamicsKnobs(CC, Value)
+		else			-- CC is a Button
+			if Value == buttonPress then
+				OctaveButtons(CC)
+				if CC == buttonScales then	-- Drums mode
+					SetModeDrums()
+					RedrawButtons()
+				end
+				if CC == buttonUser then	-- User mode
+					SetModeUser()
+					RedrawButtons()
+				end
+			end
+		end
+	end
+end
+
+-- Drums Mode
+-----------------------------------------------------
+function processDrumsMode(message)
+	local msg = message:byte(1,1)
+	-- Note on with velocity 0 becomes note off
+	if msg == midiNoteOn and message:byte(3,3) == 0 then
+		msg = midiNoteOff
+	end
+	if msg == midiNoteOn then
+		local Note = message:byte(2,2)
+		if not (Note < NoteMin or Note > NoteMax) then
+			local Pad = Note - NoteOffset
+			if EditMode then
+				if Duplicating then
+					Duplicate(Pad)
+				end
+				if Deleting then
+					Delete(Pad)
+				end
+				EditingPad = Pad
+				UpdateEditingPad()
+			end
+			local Velocity = message:byte(3,3)
+			SendNoteOn(Pad, Note, Velocity)
+		end		
+	elseif msg == midiNoteOff then
+		local Note = message:byte(2,2)
+		if not (Note < NoteMin or Note > NoteMax) then
+			local Pad = Note - NoteOffset
+			local Velocity = message:byte(3,3)
+			SendNoteOff(Pad, Note, Velocity)
+		end
+	elseif msg == midiControl then
+		local CC = message:byte(2,2)
+		local Value = message:byte(3,3)
+		if IsKnob(CC) then	-- CC is a Knob
+			-- Correct CC value for knobs
+			if Value > 63 then
+				Value = Value - 128
+			end
+			EditKnobs(CC, Value)
+			DynamicsKnobs(CC, Value)
+		else			-- CC is a Button
+			if Value == buttonPress then
+				EditButtons(CC)
+				if CC == buttonScales then	-- Scales mode
+					SetModeScales()
+					RedrawButtons()
+				end
+				if CC == buttonUser then	-- User mode
+					SetModeUser()
+					RedrawButtons()
+				end
+			end
+		end
+	end
+end
+
+-- User Mode
+-----------------------------------------------------
+function processUserMode(message)
+	local msg = message:byte(1,1)
+	-- Note on with velocity 0 becomes note off
+	if msg == midiNoteOn and message:byte(3,3) == 0 then
+		msg = midiNoteOff
+	end
+	if msg == midiNoteOn then
+		local Note = message:byte(2,2)
+		if not (Note < NoteMin or Note > NoteMax) then
+			local Pad = Note - NoteOffset
+			if EditMode then
+				if Duplicating then
+					Duplicate(Pad)
+				end
+				if Deleting then
+					Delete(Pad)
+				end
+				EditingPad = Pad
+				UpdateEditingPad()
+			end
+			local Velocity = message:byte(3,3)
+			SendNoteOn(Pad, Note, Velocity)
+		end		
+	elseif msg == midiNoteOff then
+		local Note = message:byte(2,2)
+		if not (Note < NoteMin or Note > NoteMax) then
+			local Pad = Note - NoteOffset
+			local Velocity = message:byte(3,3)
+			SendNoteOff(Pad, Note, Velocity)
+		end
+	elseif msg == midiControl then
+		local CC = message:byte(2,2)
+		local Value = message:byte(3,3)
+		if IsKnob(CC) then	-- CC is a Knob
+			-- Correct CC value for knobs
+			if Value > 63 then
+				Value = Value - 128
+			end
+			EditKnobs(CC, Value)
+			DynamicsKnobs(CC, Value)
+		else			-- CC is a Button
+			if Value == buttonPress then
+				OctaveButtons(CC)
+				EditButtons(CC)
+				if CC == buttonScales then	-- Scales mode
+					SetModeScales()
+					RedrawButtons()
+				end
+				if CC == buttonUser then	-- Drums mode
+					SetModeDrums()
+					RedrawButtons()
+				end
+			end
+		end
+	end
 end

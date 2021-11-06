@@ -8,9 +8,9 @@
 
 // All program texts
 
-#define APP_NAME			"PushLua"
+#define APP_NAME			"PushLua Driver"
 #define APP_TITLE			"Yet Another Ableton Push Lua Framework"
-#define APP_VERSION			"1.00"
+#define APP_VERSION			"1.01"
 
 #define FULL_TITLE			APP_NAME " - " APP_TITLE " - v" APP_VERSION
 #define SEPARATOR			"-----------------------------------------------------------\n"

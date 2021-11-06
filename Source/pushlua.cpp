@@ -328,23 +328,29 @@ int main(int argc, char** argv) {
 	}
 
 	// Call the loop function forever (if one exists)
-	if (lua_getglobal(L, "loop")) {
+	if (lua_getglobal(L, "Loop")) {
 		while (!bailout) {
-			lua_getglobal(L, "loop");
 			int result = lua_pcall(L, 0, LUA_MULTRET, 0);
 			if (result) {
 				_puts(lua_tostring(L, -1));
 				bailout = TRUE;
+			} else {
+				lua_getglobal(L, "Loop");
 			}
 		}
+	} else {
+		_puts("Loop function not found.\n");
 	}
 
 	int stackSize = lua_gettop(L);
 	lua_pop(L, stackSize);
 
 	if (needsReset) {
-		lua_getglobal(L, "ResetDevice");
-		lua_pcall(L, 0, LUA_MULTRET, 0);
+		if (lua_getglobal(L, "ResetDevice")) {
+			lua_pcall(L, 0, LUA_MULTRET, 0);
+		} else {
+			_puts("ResetDevice function not found.\n");
+		}
 	}
 
 	lua_close(L);

@@ -5,10 +5,7 @@
 --
 
 -- Debug global to print additional information
-_debug = true
-
--- Other global variables
-device = "Push"
+_debug = false
 
 -- Setting to collect the required modules from the right place
 function script_path()
@@ -23,6 +20,7 @@ package.path = script_path().."?.lua"
 print("Script path = "..script_path())
 
 require("functions")			-- Global generic Lua functions
+require("globals")				-- Global variables
 require(device.."_functions")	-- Push specific Lua functions
 
 -- Main program
@@ -53,7 +51,15 @@ if _debug then
 	printf(device.." output port is %d\n", deviceOut)
 end
 
--- Load the configuration if exists, otherwise creates
+-- Load the scales file
+if file_exists("scales.json") then
+	LoadScales()
+else
+	CreateScales()
+	SaveScales()
+end
+
+-- Load the configuration if exists, otherwise creates it
 if file_exists("config.json") then
 	LoadConfig()
 else
@@ -69,40 +75,39 @@ InitDevice()
 -- Initialize PushLua parameters
 InitPushLua()
 
+printf("PushLua Ready!\n")
+
 -- Main loop function
-function loop()
+function Loop()
 	local stamp,message = ReadDeviceMessage()
 	if #message > 0 then
-		byte1 = message:byte(1,1)
-		byte2 = message:byte(2,2)
-		byte3 = message:byte(3,3)
-		midiType = byte1 & 0xF0
-		midiChannel = (byte1 & 0x0F) + 1
+		local byte1 = message:byte(1,1)
+		local byte2 = message:byte(2,2)
+		local byte3 = message:byte(3,3)
+		local midiType = byte1 & 0xF0
 
-		printf("Message %02x ",midiType)
-
-		-- Turn note on with speed 0 into note off
-		if midiType == 0x90 and byte3 == 0 then
-			midiType = 0x80
+		-- Turn note on with velocity 0 into note off
+		if midiType == midiNoteOn and byte3 == 0 then
+			midiType = midiNoteOff
 		end
 
-		-- Work on the MIDI events
-		if(midiType == 0x80) then 
-			ProcessNoteOff(byte2, byte3)
-		elseif(midiType == 0x90) then 
-			ProcessNoteOn(byte2, byte3)
-		elseif(midiType == 0xA0) then 
-			ProcessNotePressure(byte2, byte3)
-		elseif(midiType == 0xB0) then
-			ProcessCC(byte2, byte3)
-		elseif(midiType == 0xC0) then 
+		-- Print the MIDI events
+		printf("Msg %02x ", midiType)
+		if midiType == midiNoteOff then 
+			printf("Note Off %d\n", byte2)
+		elseif midiType == midiNoteOn then 
+			printf("Note On  %d %d\n", byte2, byte3)
+		elseif midiType == midiNotePressure then 
+			printf("Note Pressure: %d %d\n", byte2, byte3)
+		elseif midiType == midiControl then
+			printf("Control %d %d\n", byte2, byte3)
+		elseif midiType == midiProgramChange then 
 			printf("Program Change %d %d\n", byte2, byte3)
-		elseif(midiType == 0xD0) then 
-			ProcessChannelPressure(byte2)
-		elseif(midiType == 0xE0) then
+		elseif midiType == midiChannelPressure then 
+			printf("Channel Pressure %d\n", byte2)
+		elseif midiType == midiPitchBend then
 			printf("Pitchbend %d %d\n", byte2, byte3)
-			SendMidiMessage("\xE0"..string.char(byte2)..string.char(byte3))
-		elseif(midiType == 0xF0) then
+		elseif midiType == midiSysEx then
 			printf("Sysex\n")
 			for i=1,#message do
 				printf("%02x ", message:byte(i,i))
@@ -111,5 +116,26 @@ function loop()
 		else
 			printf("Message %02x %d %d\n", byte1, byte2, byte3)
 		end
+
+		-- Always forward PitchBend
+		if midiType == midiPitchBend then
+			SendMidiMessage("\xE0"..string.char(byte2)..string.char(byte3))
+		end
+
+		-- Always forward Sustain
+		if midiType == midiControl and byte2 == midiCCSustain then
+			SendCC(byte2, byte3)
+		end
+
+		-- Process the MIDI events according to the mode
+		if Mode == 1 then
+			processScalesMode(message)
+		elseif Mode == 2 then
+			processDrumsMode(message)
+		else
+			processUserMode(message)
+		end
+	else
+		Sleep(10)
 	end
 end
