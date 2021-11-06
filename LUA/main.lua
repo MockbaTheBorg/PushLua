@@ -92,29 +92,31 @@ function Loop()
 		end
 
 		-- Print the MIDI events
-		printf("Msg %02x ", midiType)
-		if midiType == midiNoteOff then 
-			printf("Note Off %d\n", byte2)
-		elseif midiType == midiNoteOn then 
-			printf("Note On  %d %d\n", byte2, byte3)
-		elseif midiType == midiNotePressure then 
-			printf("Note Pressure: %d %d\n", byte2, byte3)
-		elseif midiType == midiControl then
-			printf("Control %d %d\n", byte2, byte3)
-		elseif midiType == midiProgramChange then 
-			printf("Program Change %d %d\n", byte2, byte3)
-		elseif midiType == midiChannelPressure then 
-			printf("Channel Pressure %d\n", byte2)
-		elseif midiType == midiPitchBend then
-			printf("Pitchbend %d %d\n", byte2, byte3)
-		elseif midiType == midiSysEx then
-			printf("Sysex\n")
-			for i=1,#message do
-				printf("%02x ", message:byte(i,i))
+		if _debug then
+			printf("Msg %02x ", midiType)
+			if midiType == midiNoteOff then 
+				printf("Note Off %d\n", byte2)
+			elseif midiType == midiNoteOn then 
+				printf("Note On  %d %d\n", byte2, byte3)
+			elseif midiType == midiNotePressure then 
+				printf("Note Pressure: %d %d\n", byte2, byte3)
+			elseif midiType == midiControl then
+				printf("Control %d %d\n", byte2, byte3)
+			elseif midiType == midiProgramChange then 
+				printf("Program Change %d %d\n", byte2, byte3)
+			elseif midiType == midiChannelPressure then 
+				printf("Channel Pressure %d\n", byte2)
+			elseif midiType == midiPitchBend then
+				printf("Pitchbend %d %d\n", byte2, byte3)
+			elseif midiType == midiSysEx then
+				printf("Sysex\n")
+				for i=1,#message do
+					printf("%02x ", message:byte(i,i))
+				end
+				printf("\n")
+			else
+				printf("Message %02x %d %d\n", byte1, byte2, byte3)
 			end
-			printf("\n")
-		else
-			printf("Message %02x %d %d\n", byte1, byte2, byte3)
 		end
 
 		-- Always forward PitchBend

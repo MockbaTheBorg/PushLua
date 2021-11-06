@@ -353,8 +353,10 @@ int main(int argc, char** argv) {
 		}
 	}
 
+	_puts("Closing Lua.\n");
 	lua_close(L);
 
+	_puts("Closing Devices.\n");
 	delete devicein;
 	delete deviceout;
 	delete midiout;
