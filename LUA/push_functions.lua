@@ -85,6 +85,12 @@ for i=1,64 do
 	UserColors[i] = BackColor
 end
 
+-- Notes currently being played to prevent duplications
+ActiveNotes = {}
+for i=0,127 do
+	ActiveNotes[i] = 0
+end
+
 -- Push functions
 -----------------------------------------------------
 
@@ -758,6 +764,10 @@ function SendNoteOn(Pad, Note, Velocity)
 		Velocity = newVelocity
 	end
 	local newNote = Notes[Pad]
+	ActiveNotes[newNote] = ActiveNotes[newNote] + 1
+	if ActiveNotes[newNote] > 1 then
+		return
+	end
 	if newNote > -1 then
 		for i=1,64 do
 			if Notes[i] == newNote then
@@ -785,6 +795,13 @@ end
 -- Sends a note off message
 function SendNoteOff(Pad, Note, Velocity)
 	local newNote = Notes[Pad]
+	ActiveNotes[newNote] = ActiveNotes[newNote] - 1
+	if ActiveNotes[newNote] < 0 then
+		ActiveNotes[newNote] = 0
+	end
+	if ActiveNotes[newNote] > 0 then
+		return
+	end
 	if newNote > -1 then
 		for i=1,64 do
 			if Notes[i] == newNote then

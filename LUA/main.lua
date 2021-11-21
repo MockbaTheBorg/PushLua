@@ -126,7 +126,7 @@ function Loop()
 
 		-- Always forward Sustain
 		if midiType == midiControl and byte2 == midiCCSustain then
-			SendCC(byte2, byte3)
+			SendMidiMessage("\xB0"..string.char(byte2)..string.char(byte3))
 		end
 
 		-- Process the MIDI events according to the mode
