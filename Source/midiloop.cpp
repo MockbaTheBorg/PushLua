@@ -108,6 +108,16 @@ void mycallback( double deltatime, std::vector< unsigned char > *message, void *
                                 sendMessage(messageOut, byte0, byte1, byte2);
                                 break;
                             // some macro kind stuff: (123 - 126 seem unused so far :-)
+                            case 121:
+                                sendMessage(messageOut, 0x90, 112, 127);
+                                sendMessage(messageOut, 0x80, 112, 0);
+                                sendMessage(messageOut, 0x90, 56, 127);
+                                break;
+                            case 122:
+                                sendMessage(messageOut, 0x90, 113, 127);
+                                sendMessage(messageOut, 0x80, 113, 0);
+                                sendMessage(messageOut, 0x90, 56, 127);
+                                break;
                             case 123: // press previous track select button (relating to our column pointer)
                                 sendMessage(messageOut, byte0, previousColumnNote(false), byte2);
                                 break;
@@ -181,6 +191,12 @@ void mycallback( double deltatime, std::vector< unsigned char > *message, void *
                             case 115: // navigate right
 				            case 118: // arp
                                 sendMessage(messageOut, byte0, byte1, byte2);
+                                break;
+                            case 121:
+                                sendMessage(messageOut, 0x80, 56, 0);
+                                break;
+                            case 122:
+                                sendMessage(messageOut, 0x80, 56, 0);
                                 break;
                             case 123: // release previous track select button (relating to our column pointer)
                             case 124: // release next track select button (relating to our column pointer)
